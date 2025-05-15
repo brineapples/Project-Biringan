@@ -72,14 +72,14 @@ int main() {
             DialogueBox dialogueBox(window, bodyFont);
 
             // Set background image for the current scene
-            dialogueBox.setBackground("Darkwalk.jpg");  // Replace with your actual file path
+            dialogueBox.setBackground("bgs.png");  // Replace with your actual file path
 
             // Dialogue script: list of entries with speaker and text
             std::vector<DialogueEntry> dialogues = {
                 {"Dito ba talaga ang daan?", "???"},
                 {"Dapat talaga nagpasama ko. Masyadong madilim ang kalsada.", "???"},
                 {"Kaliwa ba o Kanan yung pupuntahan?", "???"},
-                {"ìApo, puntahan mo nga muna bahay nila Auntie Amelita mo. Bigyan mo sya nang \nnatirang maja.î", "Flashback(Mother)"},
+                {"‚ÄúApo, puntahan mo nga muna bahay nila Auntie Amelita mo. Bigyan mo sya nang \nnatirang maja.‚Äù", "Flashback(Mother)"},
                 {"Saan bahay ni Auntie?", "???"},
                 {"Tapat bahay nya sa municipal hall. Pangatlong bahay na may third floor.\nNaintindihan mo ? ", "Flashback(Mother)"},
                 {"Opo!", "Flashback(???)"},
