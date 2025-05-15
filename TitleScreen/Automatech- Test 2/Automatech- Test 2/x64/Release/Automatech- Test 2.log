@@ -1,0 +1,30 @@
+﻿  AboutScreen.cpp
+  Automatech- Test 2.cpp
+  DialogueBox.cpp
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(10,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(10,51): warning C4244:         with
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(10,51): warning C4244:         [
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(10,51): warning C4244:             T=unsigned int
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(10,51): warning C4244:         ]
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(18,52): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(18,52): warning C4244:         with
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(18,52): warning C4244:         [
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(18,52): warning C4244:             T=unsigned int
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(18,52): warning C4244:         ]
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(23,58): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(23,58): warning C4244:         with
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(23,58): warning C4244:         [
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(23,58): warning C4244:             T=unsigned int
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(23,58): warning C4244:         ]
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(31,52): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(31,52): warning C4244:         with
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(31,52): warning C4244:         [
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(31,52): warning C4244:             T=unsigned int
+C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\Automatech- Test 2\DialogueBox.cpp(31,52): warning C4244:         ]
+  PlayIntro.cpp
+  Generating code
+  9 of 317 functions ( 2.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Automatech- Test 2.vcxproj -> C:\Users\Becha\OneDrive\Desktop\Automatech\repos\Automatech- Test 2\x64\Release\Automatech- Test 2.exe
