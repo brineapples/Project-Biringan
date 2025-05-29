@@ -1,5 +1,6 @@
 #include "DialogueBox.h"
 #include <iostream>
+#include <fstream>
 
 // Constructor: sets up the initial visuals for dialogue box and speaker name
 DialogueBox::DialogueBox(sf::RenderWindow& win, sf::Font& fnt)
@@ -35,13 +36,41 @@ DialogueBox::DialogueBox(sf::RenderWindow& win, sf::Font& fnt)
 
 // Starts a dialogue sequence from a list of DialogueEntry
 void DialogueBox::startDialogue(const std::vector<DialogueEntry>& entries) {
+    allDialogues = entries;                  // Store all dialogues
+    //currentDialogueIndex = 0;
     dialogues = std::queue<DialogueEntry>();    // Clear previous dialogues
 
     for (const auto& entry : entries)
         dialogues.push(entry);                 // Queue new dialogues
 
-    nextDialogue();                             // Start first dialogue
+    loadGameState();
     visible = true;                             // Make the box visible
+}
+
+void DialogueBox::saveGameState() {
+    std::ofstream saveFile("savegame.txt");
+    if (saveFile.is_open()) {
+        // Save the number of dialogues left as a simple example
+        saveFile << currentDialogueIndex << std::endl;
+        std::cout << "[SAVE] Saved index: " << currentDialogueIndex << std::endl;
+        // You can add more state info as needed
+        saveFile.close();
+    }
+}
+
+void DialogueBox::loadGameState() {
+    std::ifstream saveFile("savegame.txt");
+    if (saveFile.is_open()) {
+        saveFile >> currentDialogueIndex;
+        std::cout << "[LOAD] Loaded index: " << currentDialogueIndex << std::endl;
+        saveFile.close();
+        // Rebuild the queue from the index
+        dialogues = std::queue<DialogueEntry>();
+        for (size_t i = currentDialogueIndex; i < allDialogues.size(); ++i)
+            dialogues.push(allDialogues[i]);
+        nextDialogue();
+        visible = true;
+    }
 }
 
 // Move to the next dialogue line
@@ -62,6 +91,8 @@ void DialogueBox::nextDialogue() {
     speakerText.setString(speakerName);         // Show speaker name
     typeClock.restart();                        // Reset typing clock
     finishedTyping = false;                     // Reset typing status
+    currentDialogueIndex++;
+    saveGameState(); 
 }
 
 // Updates the text display each frame for typewriter effect
