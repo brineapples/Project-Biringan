@@ -43,11 +43,11 @@ void DialogueBox::startDialogue(const std::vector<DialogueEntry>& entries) {
     for (const auto& entry : entries)
         dialogues.push(entry);                 // Queue new dialogues
 
-    loadGameState();
+    loadGameState(); //LOOK HERE
     visible = true;                             // Make the box visible
 }
 
-void DialogueBox::saveGameState() {
+void DialogueBox::saveGameState() { //LOOK HERE
     std::ofstream saveFile("savegame.txt");
     if (saveFile.is_open()) {
         // Save the number of dialogues left as a simple example
@@ -58,7 +58,7 @@ void DialogueBox::saveGameState() {
     }
 }
 
-void DialogueBox::loadGameState() {
+void DialogueBox::loadGameState() { //LOOK HERE
     std::ifstream saveFile("savegame.txt");
     if (saveFile.is_open()) {
         saveFile >> currentDialogueIndex;
@@ -91,8 +91,8 @@ void DialogueBox::nextDialogue() {
     speakerText.setString(speakerName);         // Show speaker name
     typeClock.restart();                        // Reset typing clock
     finishedTyping = false;                     // Reset typing status
-    currentDialogueIndex++;
-    saveGameState(); 
+    currentDialogueIndex++; //LOOK HERE
+    saveGameState(); //LOOK HERE
 }
 
 // Updates the text display each frame for typewriter effect
