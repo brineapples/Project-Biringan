@@ -72,7 +72,7 @@ int main() {
             DialogueBox dialogueBox(window, bodyFont);
 
             // Set background image for the current scene
-            dialogueBox.setBackground("bgs.png");  // Replace with your actual file path
+            dialogueBox.setBackground("bgs.png");  
 
             // Dialogue script: list of entries with speaker and text
             std::vector<DialogueEntry> dialogues = {
@@ -90,6 +90,8 @@ int main() {
 
             // Begin dialogue sequence
             dialogueBox.startDialogue(dialogues);
+            dialogueBox.loadGameState();
+
 
             // Flag to show/hide dialogue box
             bool showDialogue = true;
