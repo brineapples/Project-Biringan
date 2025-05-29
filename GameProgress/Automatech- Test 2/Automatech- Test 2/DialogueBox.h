@@ -28,14 +28,14 @@ public:
     void setBackground(const std::string& imagePath);
     void drawBackground();
 
-    void saveGameState();
-    void loadGameState();
+    void saveGameState(); //LOOK HERE
+    void loadGameState(); // LOOK HERE
 
 private:
     void nextDialogue();
 
-    std::vector<DialogueEntry> allDialogues; // Store all dialogues
-    size_t currentDialogueIndex = 0;         
+    std::vector<DialogueEntry> allDialogues; //LOOK HERE
+    size_t currentDialogueIndex = 0;         //LOOK HERE
 
     sf::RenderWindow& window;
     sf::Font& font;
