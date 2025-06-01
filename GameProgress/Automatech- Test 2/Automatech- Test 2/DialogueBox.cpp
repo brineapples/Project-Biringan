@@ -1,6 +1,7 @@
 #include "DialogueBox.h"
 #include <iostream>
 #include <fstream>
+#include <cstdio>
 
 // Constructor: sets up the initial visuals for dialogue box and speaker name
 DialogueBox::DialogueBox(sf::RenderWindow& win, sf::Font& fnt)
@@ -145,6 +146,11 @@ void DialogueBox::handleInput(const sf::Event& event) {
             nextDialogue();                     // Otherwise go to next dialogue
         }
     }
+
+    // New exit-and-reset on 'Z' key press
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) { // Reset Load State
+        exitAndResetGame();
+    }
 }
 
 // Returns whether the dialogue box is currently shown
@@ -176,3 +182,21 @@ void DialogueBox::drawBackground() {
         window.draw(backgroundSprite);
     }
 }
+
+void DialogueBox::exitAndResetGame() { // Reset Load State
+    // Delete the save file to reset saved progress
+    if (std::remove("savegame.txt") == 0) {
+        std::cout << "[EXIT] Save file deleted successfully." << std::endl;
+    }
+    else {
+        std::cout << "[EXIT] No save file to delete or deletion failed." << std::endl;
+    }
+    // Reset internal game state variables
+    currentDialogueIndex = 0;
+    dialogues = std::queue<DialogueEntry>();
+    visible = false;
+    std::cout << "[EXIT] Game state reset and exited." << std::endl;
+}
+
+
+
