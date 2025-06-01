@@ -31,6 +31,8 @@ public:
     void saveGameState(); //LOOK HERE
     void loadGameState(); // LOOK HERE
 
+    void exitAndResetGame(); // Reset Load State
+
 private:
     void nextDialogue();
 
