@@ -33,6 +33,23 @@ DialogueBox::DialogueBox(sf::RenderWindow& win, sf::Font& fnt)
     speakerText.setCharacterSize(18);
     speakerText.setFillColor(sf::Color::White);
     speakerText.setPosition(30, window.getSize().y - 185);
+
+    // Setup speed icon rectangle (button)
+    speedIcon.setSize(sf::Vector2f(40, 40));
+    speedIcon.setFillColor(sf::Color(100, 100, 100, 180)); // semi-transparent dark gray
+    speedIcon.setOutlineColor(sf::Color::White);
+    speedIcon.setOutlineThickness(2);
+    // Position it at bottom right inside dialogue box with margin
+    speedIcon.setPosition(background.getPosition().x + background.getSize().x - 50,
+        background.getPosition().y + background.getSize().y - 50);
+
+    // Setup auto advance icon rectangle (button)
+    autoAdvanceIcon.setSize(sf::Vector2f(40, 40));
+    autoAdvanceIcon.setFillColor(sf::Color(100, 100, 100, 180)); // semi-transparent dark gray
+    autoAdvanceIcon.setOutlineColor(sf::Color::White);
+    autoAdvanceIcon.setOutlineThickness(2);
+    // Position next to speed icon with 10px gap
+    autoAdvanceIcon.setPosition(speedIcon.getPosition().x - 50, speedIcon.getPosition().y);
 }
 
 // Starts a dialogue sequence from a list of DialogueEntry
@@ -96,60 +113,118 @@ void DialogueBox::nextDialogue() {
     saveGameState(); //LOOK HERE
 }
 
-// Updates the text display each frame for typewriter effect
+// Update function - handle automatic advancing
 void DialogueBox::update() {
-    if (!visible || finishedTyping)
-        return;                                 // Skip if box is hidden or already done typing
-
-    float elapsed = typeClock.getElapsedTime().asSeconds(); // Time since last update
-    std::size_t targetCharIndex = static_cast<std::size_t>(elapsed * typeSpeed); // How many letters to show
-
-    if (targetCharIndex > currentCharIndex) {
-        // Update text one character at a time
-        currentCharIndex = std::min(targetCharIndex, fullText.size());
-        textDisplay.setString(fullText.substr(0, currentCharIndex));
-
-        if (currentCharIndex >= fullText.size()) {
-            finishedTyping = true;              // Finish typing when all characters are shown
+    if (!visible) return;
+    if (!finishedTyping) {
+        float elapsed = typeClock.getElapsedTime().asSeconds();
+        std::size_t targetCharIndex = static_cast<std::size_t>(elapsed * typeSpeed);
+        if (targetCharIndex > currentCharIndex) {
+            currentCharIndex = std::min(targetCharIndex, fullText.size());
+            textDisplay.setString(fullText.substr(0, currentCharIndex));
+            if (currentCharIndex >= fullText.size()) {
+                finishedTyping = true;
+                typeClock.restart();  // restart clock for auto advance timer
+            }
+        }
+    }
+    else if (autoAdvanceEnabled) {
+        // Auto advance after 1.5 seconds (adjust as needed)
+        if (typeClock.getElapsedTime().asSeconds() > 1.5f) {
+            nextDialogue();
         }
     }
 }
 
 // Draws the dialogue box and speaker label
 void DialogueBox::draw() {
-    if (!visible) return;                       // Only draw if visible
+    if (!visible) return;
 
-    window.draw(background);                    // Draw background box
-    window.draw(textDisplay);                   // Draw the dialogue text
+    window.draw(background);
+    window.draw(textDisplay);
 
     if (!speakerName.empty()) {
-        window.draw(speakerBackground);         // Draw name box
-        window.draw(speakerText);               // Draw speaker name
+        window.draw(speakerBackground);
+        window.draw(speakerText);
     }
+
+    // Draw speed icon rectangle as button background
+    window.draw(speedIcon);
+
+    // Draw the number inside the icon that updates after clicking
+    sf::Text speedText;
+    speedText.setFont(font);
+    speedText.setCharacterSize(20);
+    speedText.setFillColor(sf::Color::White);
+    speedText.setStyle(sf::Text::Bold);
+    speedText.setString(std::to_string(currentSpeedMultiplier));
+
+    // Center the text inside the speedIcon
+    sf::FloatRect iconBounds = speedIcon.getGlobalBounds();
+    sf::FloatRect textBounds = speedText.getLocalBounds();
+
+    speedText.setPosition(
+        iconBounds.left + (iconBounds.width - textBounds.width) / 2 - textBounds.left,
+        iconBounds.top + (iconBounds.height - textBounds.height) / 2 - textBounds.top
+    );
+
+    window.draw(speedText);
+
+    // Draw auto advance icon
+    window.draw(autoAdvanceIcon);
+    sf::Text autoText;
+    autoText.setFont(font);
+    autoText.setCharacterSize(16);
+    autoText.setFillColor(autoAdvanceEnabled ? sf::Color::Green : sf::Color::Red);
+    autoText.setString(autoAdvanceEnabled ? "A" : "X");
+    sf::FloatRect autoBounds = autoAdvanceIcon.getGlobalBounds();
+    sf::FloatRect autoTextBounds = autoText.getLocalBounds();
+    autoText.setPosition(
+        autoBounds.left + (autoBounds.width - autoTextBounds.width) / 2 - autoTextBounds.left,
+        autoBounds.top + (autoBounds.height - autoTextBounds.height) / 2 - autoTextBounds.top
+    );
+    window.draw(autoText);
 }
+
 
 // Handles input to advance or fast-forward dialogue
 void DialogueBox::handleInput(const sf::Event& event) {
     if (!visible) return;
-
-    // Accept mouse click or spacebar
-    if (event.type == sf::Event::MouseButtonPressed ||
-        (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)) {
-
+    if (event.type == sf::Event::MouseButtonPressed) {
+        float mx = static_cast<float>(event.mouseButton.x);
+        float my = static_cast<float>(event.mouseButton.y);
+        // Check icons clicks first
+        if (handleSpeedIconClick(mx, my) || handleAutoAdvanceIconClick(mx, my)) {
+            return;  // Clicking icons doesn't advance dialogue
+        }
         if (!finishedTyping) {
-            // If still typing, instantly show full text
             textDisplay.setString(fullText);
             finishedTyping = true;
             currentCharIndex = fullText.size();
         }
         else {
-            nextDialogue();                     // Otherwise go to next dialogue
+            nextDialogue();
         }
     }
 
-    // New exit-and-reset on 'Z' key press
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z) { // Reset Load State
-        exitAndResetGame();
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Space) {
+            if (!finishedTyping) {
+                textDisplay.setString(fullText);
+                finishedTyping = true;
+                currentCharIndex = fullText.size();
+            }
+            else {
+                nextDialogue();
+            }
+        }
+        if (event.key.code == sf::Keyboard::Z) {
+            exitAndResetGame();
+        }
+        // Keyboard speed control (optional)
+        if (event.key.code == sf::Keyboard::Num1) Forward(1);
+        else if (event.key.code == sf::Keyboard::Num2) Forward(2);
+        else if (event.key.code == sf::Keyboard::Num3) Forward(3);
     }
 }
 
@@ -196,6 +271,42 @@ void DialogueBox::exitAndResetGame() { // Reset Load State
     dialogues = std::queue<DialogueEntry>();
     visible = false;
     std::cout << "[EXIT] Game state reset and exited." << std::endl;
+}
+
+// Forward : Change the speed of text
+void DialogueBox::Forward(int multiplier) {
+    if (multiplier >= 1 && multiplier <= 3) {
+        currentSpeedMultiplier = multiplier;
+        typeSpeed = 50.0f * multiplier;
+        std::cout <<  "[SPEED] Typing speed set to " << multiplier <<  "x." << std::endl;
+    }
+}
+
+// Function to handle speed icon clicks and cycle speed
+bool DialogueBox::handleSpeedIconClick(float mouseX, float mouseY) {
+    if (speedIcon.getGlobalBounds().contains(mouseX, mouseY)) {
+        // Cycle speed 1 -> 2 -> 3 -> 1
+        int nextSpeed = currentSpeedMultiplier + 1;
+        if (nextSpeed > 3) nextSpeed = 1;
+        Forward(nextSpeed);
+        return true; // Click was on speed icon
+    }
+    return false; // Click was not on speed icon
+}
+
+// Toggle
+void DialogueBox::ToggleAutoAdvance() {
+    autoAdvanceEnabled = !autoAdvanceEnabled;
+    std::cout << "[AUTO ADVANCE] Auto advance is now " << (autoAdvanceEnabled ? "ENABLED" : "DISABLED") << std::endl;
+}
+
+// Handle clicks on auto advance icon; return true if handled
+bool DialogueBox::handleAutoAdvanceIconClick(float mouseX, float mouseY) {
+    if (autoAdvanceIcon.getGlobalBounds().contains(mouseX, mouseY)) {
+        ToggleAutoAdvance();
+        return true;
+    }
+    return false;
 }
 
 
