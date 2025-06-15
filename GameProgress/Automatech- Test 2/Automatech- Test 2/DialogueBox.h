@@ -33,8 +33,13 @@ public:
 
     void exitAndResetGame(); // Reset Load State
 
+    void Forward(int multiplier); // Forward
+    void ToggleAutoAdvance(); // Toggle auto advance
+
 private:
     void nextDialogue();
+    bool handleSpeedIconClick(float mouseX, float mouseY); // New method to handle speed icon clicks
+    bool handleAutoAdvanceIconClick(float mouseX, float mouseY);
 
     std::vector<DialogueEntry> allDialogues; //LOOK HERE
     size_t currentDialogueIndex = 0;         //LOOK HERE
@@ -63,6 +68,14 @@ private:
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
     bool hasBackgroundImage = false;
+
+    // New members for speed control
+    int currentSpeedMultiplier = 1; // Initialize multiplier
+    sf::RectangleShape speedIcon; // Speed icon
+
+    // Auto advance control members
+    bool autoAdvanceEnabled = false;
+    sf::RectangleShape autoAdvanceIcon;
 };
 
 #endif // DIALOGUEBOX_HPP
