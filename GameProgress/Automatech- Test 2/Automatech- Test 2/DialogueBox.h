@@ -37,6 +37,7 @@ public:
     void ToggleAutoAdvance(); // Toggle auto advance
 
 private:
+    std::string backgroundImagePath; //LOOK HERE
     void nextDialogue();
     bool handleSpeedIconClick(float mouseX, float mouseY); // New method to handle speed icon clicks
     bool handleAutoAdvanceIconClick(float mouseX, float mouseY);
@@ -77,5 +78,7 @@ private:
     bool autoAdvanceEnabled = false;
     sf::RectangleShape autoAdvanceIcon;
 };
+
+#endif // DIALOGUEBOX_HPP
 
 #endif // DIALOGUEBOX_HPP
