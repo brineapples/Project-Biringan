@@ -55,13 +55,12 @@ DialogueBox::DialogueBox(sf::RenderWindow& win, sf::Font& fnt)
 // Starts a dialogue sequence from a list of DialogueEntry
 void DialogueBox::startDialogue(const std::vector<DialogueEntry>& entries) {
     allDialogues = entries;                  // Store all dialogues
-    //currentDialogueIndex = 0;
+    currentDialogueIndex = 0;
     dialogues = std::queue<DialogueEntry>();    // Clear previous dialogues
 
     for (const auto& entry : entries)
         dialogues.push(entry);                 // Queue new dialogues
 
-    loadGameState(); //LOOK HERE
     visible = true;                             // Make the box visible
 }
 
@@ -70,6 +69,7 @@ void DialogueBox::saveGameState() { //LOOK HERE
     if (saveFile.is_open()) {
         // Save the number of dialogues left as a simple example
         saveFile << currentDialogueIndex << std::endl;
+        saveFile << (hasBackgroundImage ? backgroundImagePath : "none") << std::endl; //LOOK HERE
         std::cout << "[SAVE] Saved index: " << currentDialogueIndex << std::endl;
         // You can add more state info as needed
         saveFile.close();
@@ -80,6 +80,11 @@ void DialogueBox::loadGameState() { //LOOK HERE
     std::ifstream saveFile("savegame.txt");
     if (saveFile.is_open()) {
         saveFile >> currentDialogueIndex;
+        std::string imagePath; //LOOK HERE
+        saveFile >> imagePath;
+        if (imagePath != "none") {
+            setBackground(imagePath);
+        }
         std::cout << "[LOAD] Loaded index: " << currentDialogueIndex << std::endl;
         saveFile.close();
         // Rebuild the queue from the index
@@ -110,7 +115,7 @@ void DialogueBox::nextDialogue() {
     typeClock.restart();                        // Reset typing clock
     finishedTyping = false;                     // Reset typing status
     currentDialogueIndex++; //LOOK HERE
-    saveGameState(); //LOOK HERE
+    
 }
 
 // Update function - handle automatic advancing
@@ -190,6 +195,21 @@ void DialogueBox::draw() {
 // Handles input to advance or fast-forward dialogue
 void DialogueBox::handleInput(const sf::Event& event) {
     if (!visible) return;
+    if (event.type == sf::Event::KeyPressed) {
+        // ... existing code ...
+
+        // Manual save (F5)
+        if (event.key.code == sf::Keyboard::F5) {
+            saveGameState();
+            std::cout << "[USER] Game saved by user.\n";
+        }
+        // Manual load (F9)
+        if (event.key.code == sf::Keyboard::F9) {
+            loadGameState();
+            std::cout << "[USER] Game loaded by user.\n";
+        }
+    }
+
     if (event.type == sf::Event::MouseButtonPressed) {
         float mx = static_cast<float>(event.mouseButton.x);
         float my = static_cast<float>(event.mouseButton.y);
@@ -244,6 +264,7 @@ void DialogueBox::setBackground(const std::string& imagePath) {
         backgroundSprite.setScale(scaleX, scaleY);
 
         hasBackgroundImage = true;              // Mark that background is successfully loaded
+        backgroundImagePath = imagePath; //LOOK HERE
     }
     else {
         std::cerr << "Failed to load image: " << imagePath << std::endl;
