@@ -90,9 +90,7 @@ int main() {
 
             // Begin dialogue sequence
             dialogueBox.startDialogue(dialogues);
-            dialogueBox.loadGameState(); // LOOK HERE
-
-
+            
             // Flag to show/hide dialogue box
             bool showDialogue = true;
 
